@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GetYourDataset</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container">
+    <h1 class="heading">Get Your Dataset</h1>
+    <form action="datasetfinder" method="POST">
+      {% csrf_token %}
+      <div class="inputs">  
+        <label for="datasetName">Dataset Name:</label>
+        <input type="text" id="datasetName" name="datasetName">
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+
+
+
+  </div>
+  
+  <div class="container datafetched {{trial}}">
+    <div class="">
+      <h1 class="heading">{{result}}</h1>
+      {% for name,link in dt_links.items %}
+      <div class="flex-row">
+        <div class="name">{{name}}</div>
+        <div><button class="btn-go"><a href={{link}}>Download</a></button></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div> 
+
+  <div class="datasetCreation container {{generate_dt}}">
+    <h1 class="heading">No Dataset Found</h1>
+    <h1 class="heading">Generate Dataset</h1>
+    <form action="generate_dataset" method="POST">
+      {% csrf_token %}
+      <div class="inputs">  
+        <label for="datasetName">Dataset Name:</label>
+        <input type="text" id="datasetName" name="datasetName" placeholder="Dataset Name" required>
+      </div>
+      <div class="inputs">  
+      <label for="Attributes">Attributes:</label>
+      <input type="text" id="attributes" name="attributes" placeholder="attribute1,attribute2,attribute3,attribute4" required>
+      </div>
+      <div class="inputs">  
+      <label for="fileType">FileType:</label>
+      <input type="text" id="fileType" name="fileType" placeholder="csv">
+      </div>
+      <div class="inputs">  
+      <label for="SpecialConditions">Special Conditions:</label>
+      <input type="text" id="specialConditions" name="specialConditions" placeholder="Anything you want">
+      </div>
+      <div class="inputs">  
+      <label for="NoOfRows">No. Of Rows:</label>
+      <input type="number" id="NoOfRows" name="NoOfRows" placeholder="999">
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+
+  <div class="datafetched {{generated_dataset}}">
+    <div class="flex-row">
+      <div class="name">File To Download</div>
+      <div><button class="btn-go"><a href="{% url 'download-file' filename='data.txt' %}">Download</a></button></div>
+    </div>
+    <div class='flex-row'>
+      {{ table_html|safe }}
+    </div>
+  </div>
+</body>
+</html>
